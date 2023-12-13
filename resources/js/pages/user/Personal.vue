@@ -22,7 +22,8 @@
                         @click.prevent="selectFile()">Image</a>
                 </div>
                 <div>
-                    <a v-if="image" @click.prevent="image = null" class="ml-3" href="#">Cancel</a>
+                    <a v-if="image" @click.prevent="image = null"
+                        class="block p-2 w-16 text-center text-sm rounded-3xl bg-red-500 text-white" href="#">Cancel</a>
                 </div>
             </div>
             <div v-if="image">
@@ -33,18 +34,17 @@
                 hover:bg-white hover:border hover:border-green-600 hover:text-green-600 box-border ml-auto">Publish</a>
             </div>
         </div>
-
         <div v-if="posts">
-            <h1 class="mb-8 pb-8 border-b border-gray-400">Posts</h1>
-            <Post v-for="post in posts" :post="post"></Post>
-        </div>
+            <!-- <h1 class="mb-8 pb-8 border-b border-gray-400">Posts</h1>-->
+            <Post v-for="post in posts" :post="post" ></Post> 
 
+        </div>
     </div>
 </template>
 
 <script>
-import Post from "../../components/Post.vue";
-import Stat from "../../components/Stat.vue";
+import Post from "@/components/Post.vue";
+// import Stat from "../../components/Stat.vue";
 export default {
     name: "Personal",
 
@@ -61,12 +61,12 @@ export default {
 
     components: {
         Post,
-        Stat
+        // Stat
     },
 
     mounted() {
         this.getPosts()
-        this.getStats()
+        // this.getStats()
     },
 
     methods: {
@@ -79,15 +79,19 @@ export default {
         },
 
         getPosts() {
-            axios.get('/api/posts')
+            axios.get('/api/post/list')
                 .then(res => {
+
+
+                    console.log(res.data.data);
+
                     this.posts = res.data.data
                 })
         },
 
         store() {
             const id = this.image ? this.image.id : null
-            axios.post('/api/posts', { title: this.title, content: this.content, image_id: id })
+            axios.post('/api/post', { title: this.title, content: this.content, image_id: id })
                 .then(res => {
                     this.title = ''
                     this.content = ''
@@ -108,12 +112,11 @@ export default {
             const formData = new FormData()
             formData.append('image', file)
 
-            axios.post('/api/post_images', formData)
+            axios.post('/api/post/images', formData)
                 .then(res => {
                     this.image = res.data.data
                 })
         }
-
     }
 }
 </script>
