@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\FeedsController;
 use App\Http\Controllers\PostImagesController;
 use App\Http\Controllers\PostsController;
@@ -25,8 +26,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::group(['prefix' => 'user'], function () {
         Route::resource('/', UsersController::class);
         Route::get('/{user}/posts', [UsersController::class, 'post']);
-
-
+        
+        Route::post('/stats', [UsersController::class, 'stat']);
 
         Route::group(['prefix' => 'feed'], function () {
             Route::resource('/', FeedsController::class);
@@ -39,6 +40,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     });
 
     Route::group(['prefix' => 'post'], function () {
+        Route::resource('/{post_id}/comment', CommentsController::class);
+        Route::get('/{post_id}/comment-list', [CommentsController::class, 'list']);
         Route::get('/{id}/toggle', [PostsController::class, 'toggleLike']);
         Route::resource('/', PostsController::class);
         Route::post('/{post}/repost', [PostsController::class, 'repost']);

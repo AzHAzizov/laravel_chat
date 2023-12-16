@@ -44,7 +44,7 @@
 
 <script>
 import Post from "@/components/Post.vue";
-// import Stat from "../../components/Stat.vue";
+import Stat from "../../components/Stat.vue";
 export default {
     name: "Personal",
 
@@ -61,18 +61,18 @@ export default {
 
     components: {
         Post,
-        // Stat
+        Stat
     },
 
     mounted() {
         this.getPosts()
-        // this.getStats()
+        this.getStats()
     },
 
     methods: {
 
         getStats() {
-            axios.post('/api/users/stats', { user_id: null })
+            axios.post('/api/user/stats', { user_id: null })
                 .then(res => {
                     this.stats = res.data.data
                 })

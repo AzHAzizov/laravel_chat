@@ -10,7 +10,7 @@
 
 <script>
 import Post from "../../components/Post.vue";
-// import Stat from "../../components/Stat.vue";
+import Stat from "../../components/Stat.vue";
 export default {
     name: "Feed",
 
@@ -22,15 +22,25 @@ export default {
 
     components: {
         Post,
-        // Stat
+        Stat
     },
 
     mounted() {
         this.getPosts()
-        // this.getStats()
+        this.getStats()
     },
 
     methods: {
+
+
+        getStats() {
+            axios.post('/api/user/stats', { user_id: null })
+                .then(res => {
+                    this.stats = res.data.data
+                })
+        },
+
+        
         getPosts() {
             axios.get(`/api/user/feed/post/list`)
                 .then(res => {

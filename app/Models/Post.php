@@ -10,7 +10,8 @@ class Post extends Model
 {
     use HasFactory;
     protected $guarded = false;
-    protected $with = ['image', 'likedUsers', 'repostedPost'];
+    protected $withCount = ['comments', 'likedUsers'];
+    protected $with = ['image', 'likedUsers', 'repostedPost', 'user'];
 
 
     public function image() {
@@ -28,7 +29,21 @@ class Post extends Model
     }
 
 
+    public function comments() {
+        return $this->hasMany(Comment::class, 'post_id', 'id');
+    }
+
     public function repostedPost() {
         return $this->belongsTo(Post::class, 'reposted_id', 'id');
+    }
+
+
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function repostedByPosts()
+    {
+        return $this->hasMany(Post::class, 'reposted_id', 'id');
     }
 }

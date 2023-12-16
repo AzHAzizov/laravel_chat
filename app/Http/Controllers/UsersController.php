@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\User\StatRequest;
 use App\Http\Resources\Post\PostResource;
 use App\Http\Resources\User\UsersResource;
 use App\Models\LikedPost;
+use App\Models\Post;
 use App\Models\SubscriberFollowing;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -130,5 +132,23 @@ class UsersController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+
+
+    public function stat(StatRequest $request) {
+        $data = $request->validated();
+        $userId = isset($data['user_id'])  ? $data['user_id'] : auth()->id();
+
+
+
+        $result = [];
+        $result['subscribers_count'] = SubscriberFollowing::where('following_id', $userId)->count();
+        $result['followings_count'] = SubscriberFollowing::where('subscriber_id', $userId)->count();
+        $postsId = Post::where('user_id', $userId)->get('id')->pluck('id')->toArray();
+        $result['likes_count'] = LikedPost::whereIn('post_id', $postsId)->count();
+        $result['posts_count'] = count($postsId);
+
+        return response()->json(['data' => $result]);
     }
 }

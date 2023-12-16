@@ -82,7 +82,7 @@ class PostsController extends Controller
 
     public function getList()
     {
-        $posts = Post::where('user_id', auth()->id())->latest()->get();
+        $posts = Post::where('user_id', auth()->id())->withCount('repostedByPosts')->latest()->get();
 
         $likedPosts = LikedPost::where('user_id', auth()->id())->get('post_id')->pluck('post_id')->toArray();
 

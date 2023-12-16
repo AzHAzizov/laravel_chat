@@ -59,7 +59,7 @@ class FeedsController extends Controller
     public function postList()
     {
         $folledIds = auth()->user()->followings()->get()->pluck('id')->toArray();
-        $posts = Post::whereIn('user_id', $folledIds)->get();
+        $posts = Post::whereIn('user_id', $folledIds)->withCount('repostedByPosts')->get();
 
         $likedPosts = LikedPost::where('user_id', auth()->id())->get('post_id')->pluck('post_id')->toArray();
 

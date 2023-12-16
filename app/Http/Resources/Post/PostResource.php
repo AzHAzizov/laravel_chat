@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Post;
 
+use App\Http\Resources\User\UsersResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PostResource extends JsonResource
@@ -20,9 +21,12 @@ class PostResource extends JsonResource
             'is_liked' => $this->is_liked ?? false,
             'id' => $this->id,
             'url' => $this->image->url ?? null,
+            'user' => new UsersResource($this->user),
             'date' => $this->date,
-            'likes_count' => $this->likedUsers->count(),
-            'reposted_post' => new RepostedPostResource($this->repostedPost)
+            'likes_count' => $this->liked_users_count,
+            'reposted_post' => new RepostedPostResource($this->repostedPost),
+            'comments_count' => $this->comments_count,
+            'reposted_by_posts_count' => $this->reposted_by_posts_count
         ];
     }
 }
